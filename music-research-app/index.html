@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>EchoResearch | AI-Powered Music Analysis & Summarization</title>
+  <meta name="description" content="An advanced research platform that synthesizes musicology insights, cognitive impacts, pros/cons, and recommendations on music topics using Google Gemini.">
+  <meta name="author" content="EchoResearch AI">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./style.css">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- App Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <!-- Music waves / Sparkles icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <h1 class="brand-title">EchoResearch</h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-settings" class="btn-icon" title="API Configuration" aria-label="API Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Error Banner -->
+    <div id="error-alert" class="alert-error" role="alert">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <div>
+        <strong style="display:block; font-weight:700; margin-bottom: 2px;">Configuration Alert</strong>
+        <span id="error-message">Gemini API Key is missing or invalid. Please check your config.</span>
+      </div>
+    </div>
+
+    <!-- API Key Configuration Drawer -->
+    <section id="config-drawer" class="config-drawer">
+      <div class="config-header">
+        <h2 class="config-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Gemini API Configuration
+        </h2>
+        <div id="api-key-status"></div>
+      </div>
+      <div class="config-body">
+        <div class="input-group">
+          <label for="api-key-input">Gemini API Key</label>
+          <div class="input-with-button">
+            <input type="password" id="api-key-input" placeholder="Paste your AI Studio API Key (AIzaSy...)" autocomplete="off">
+            <button id="save-key-btn" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Save Key</button>
+          </div>
+        </div>
+        <p class="config-info">
+          Your key is saved locally in your browser cache (localStorage) and never leaves your machine. 
+          Don't have a key? Get a free API key at 
+          <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio <svg style="display:inline-block; vertical-align: middle; margin-top:-2px" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Workspace Grid -->
+    <div class="workspace-grid">
+      
+      <!-- Left Panel: Input & Settings -->
+      <aside class="input-card">
+        <div class="input-card-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Research Parameters
+        </div>
+        
+        <form id="research-form" class="search-form">
+          <!-- Topic Input -->
+          <div class="input-group">
+            <label for="topic-input">Music Topic / Trend</label>
+            <input type="text" id="topic-input" required autocomplete="off" 
+                   placeholder="e.g. Impact of Binaural Beats on ADHD concentration">
+          </div>
+          
+          <!-- Analysis Type Option -->
+          <div class="input-group">
+            <label for="analysis-type">Comparative Dimension</label>
+            <select id="analysis-type">
+              <option value="pros-cons" selected>Pros & Cons (Direct impacts)</option>
+              <option value="opportunities-risks">Opportunities & Risks (Strategic application)</option>
+            </select>
+          </div>
+          
+          <!-- Research Tone -->
+          <div class="input-group">
+            <label for="tone-select">Analysis Perspective / Tone</label>
+            <select id="tone-select">
+              <option value="practical" selected>Practical & Actionable</option>
+              <option value="academic">Academic & Scientific</option>
+              <option value="clinical">Clinical & Therapeutic</option>
+              <option value="creative">Creative & Sonic</option>
+            </select>
+          </div>
+
+          <!-- Expandable Context/Source Box -->
+          <div class="source-section">
+            <div id="source-toggle" class="source-toggle">
+              <span>Grounding Source Material (Optional)</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div id="source-container" class="source-container">
+              <label for="source-input" style="font-size:0.8rem; color:var(--text-muted); margin-top:0.5rem">Paste research abstract, lyrics, or notes to ground the summary:</label>
+              <textarea id="source-input" placeholder="Paste raw papers, journals, articles, or transcripts here..."></textarea>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="submit-btn" class="btn-primary">
+            Analyze Topic
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </form>
+      </aside>
+
+      <!-- Right Panel: Results & Outputs -->
+      <main class="results-card">
+        
+        <!-- Placeholder / Empty State -->
+        <section id="results-placeholder" class="card-placeholder">
+          <div class="placeholder-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 0L21 9m-1.5-3v13.5m-3-11.25L10.5 11.25m0 0L9 13.5m1.5-2.25v11.25m-6-4.5h16.5" /></svg>
+          </div>
+          <h3>Awaiting Topic Analysis</h3>
+          <p>Configure your Gemini API key, input a music research topic, and generate high-fidelity scientific summaries and actionable reports.</p>
+        </section>
+
+        <!-- Loading / Wave Visualizer State -->
+        <section id="loading-container" class="loading-container">
+          <div class="equalizer">
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+            <div class="equalizer-bar"></div>
+          </div>
+          <div>
+            <div class="loading-text">Synthesizing Sonic Insights</div>
+            <div class="loading-subtext">Running Gemini cognitive analysis on audio research models...</div>
+          </div>
+        </section>
+
+        <!-- Output Results Workspace -->
+        <section id="output-workspace" class="output-workspace">
+          
+          <!-- Summary Header Details -->
+          <div class="results-summary-header">
+            <div class="results-summary-info">
+              <span>Topic Assessment</span>
+              <h2 id="result-topic">Topic Name</h2>
+            </div>
+            <div class="export-actions">
+              <span id="result-type-badge" class="btn-secondary" style="border-color: var(--accent-primary); color: var(--accent-primary); pointer-events: none;">Pros & Cons</span>
+              <button id="copy-markdown-btn" class="btn-secondary" title="Copy report in Markdown format">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy MD
+              </button>
+              <button id="copy-json-btn" class="btn-secondary" title="Copy raw JSON data">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                Copy JSON
+              </button>
+              <button id="print-report-btn" class="btn-secondary" title="Print report or save to PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Print / PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- 5 Key Insights Section -->
+          <div>
+            <h3 class="section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              5 Key Summarized Insights
+            </h3>
+            <div id="key-points-container" class="key-points-grid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Split Comparative Grid -->
+          <div class="comparison-grid">
+            
+            <!-- Positive Column (Pros / Opportunities) -->
+            <div class="comparison-column col-pros">
+              <h3 id="positive-header" class="column-header pros-header">
+                <!-- Icon and Title injected dynamically -->
+              </h3>
+              <ul id="positive-list" class="column-list">
+                <!-- Rendered dynamically -->
+              </ul>
+            </div>
+            
+            <!-- Negative Column (Cons / Risks) -->
+            <div class="comparison-column col-cons">
+              <h3 id="negative-header" class="column-header cons-header">
+                <!-- Icon and Title injected dynamically -->
+              </h3>
+              <ul id="negative-list" class="column-list">
+                <!-- Rendered dynamically -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Strategic Actionable Recommendation Card -->
+          <div class="recommendation-card">
+            <h3 class="recommendation-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+              Synthesis & Recommendation
+            </h3>
+            <p id="recommendation-text" class="recommendation-text">
+              <!-- Rendered dynamically -->
+            </p>
+            <div class="recommendation-actionable">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+              <div class="actionable-content">
+                <span class="actionable-label">Actionable Protocol</span>
+                <p id="actionable-step-text" class="actionable-text">
+                  <!-- Rendered dynamically -->
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+    
+  </div>
+
+  <!-- Lucide Icon Replace Trigger -->
+  <script>
+    // Automatically swap out lucide icon tags on load
+    lucide.createIcons();
+  </script>
+  
+  <!-- App JS Script -->
+  <script src="./app.js"></script>
+
+</body>
+</html>
